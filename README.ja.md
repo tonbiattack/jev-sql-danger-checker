@@ -49,7 +49,7 @@ npm run check -- "DELETE FROM users;"
 複数行のSQLは、改行を保つためにファイル入力を使います。
 
 ```sh
-npm run check -- --file query.sql
+npm run check:file -- query.sql
 ```
 
 標準入力から渡すこともできます。
