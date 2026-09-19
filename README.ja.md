@@ -44,6 +44,26 @@ $env:TYPESAFE_API_KEY = "your-api-key"
 npm run check -- "DELETE FROM users;"
 ```
 
+複数行のSQLは、改行を保つためにファイル入力を使います。
+
+```sh
+npm run check -- --file query.sql
+```
+
+標準入力から渡すこともできます。
+
+```sh
+cat query.sql | npm run check -- --stdin
+```
+
+PowerShellの場合:
+
+```powershell
+Get-Content query.sql -Raw | npx --no-install tsx src/cli.ts --stdin
+```
+
+Windowsでは `npm run` が標準入力を子プロセスへ確実に渡せないため、パイプ入力には直接 `npx --no-install tsx` を使います。`--file` と `--stdin` は同時に指定できません。読み取れないファイルや空の入力はエラーになります。
+
 判定が `CRITICAL` の場合は、レポートに `YOU PROBABLY DON'T WANT TO RUN THIS.` という警告が表示されます。
 
 ## SQLの例

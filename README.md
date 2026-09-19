@@ -42,6 +42,26 @@ You may also copy `.env.example` to `.env` for local reference, but the CLI itse
 npm run check -- "DELETE FROM users;"
 ```
 
+For multi-line SQL, use a file to preserve its line breaks:
+
+```sh
+npm run check -- --file query.sql
+```
+
+You can also pipe SQL through standard input:
+
+```sh
+cat query.sql | npm run check -- --stdin
+```
+
+On PowerShell:
+
+```powershell
+Get-Content query.sql -Raw | npx --no-install tsx src/cli.ts --stdin
+```
+
+On Windows, use the direct `npx --no-install tsx` form for piped input because `npm run` does not reliably forward standard input. `--file` and `--stdin` accept one input source at a time. An unreadable or empty input exits with an error.
+
 For a `CRITICAL` result, the report includes `YOU PROBABLY DON'T WANT TO RUN THIS.`
 
 ## Sample SQL
