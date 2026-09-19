@@ -42,7 +42,7 @@ CLI引数・SQLファイル・標準入力
 npm run check -- "DELETE FROM users;"
 
 # 複数行SQLをファイルから渡す（推奨）
-npm run check -- --file query.sql
+npm run check:file -- query.sql
 
 # 標準入力から渡す
 cat query.sql | npx --no-install tsx src/cli.ts --stdin

@@ -20,4 +20,18 @@ describe("npm check command", () => {
     expect(output).toContain("Error: TYPESAFE_API_KEY is not set.");
     expect(output).not.toContain(secretSql);
   });
+
+  it("forwards a file path to the dedicated file-input command", () => {
+    const result = spawnSync(
+      process.platform === "win32" ? "powershell.exe" : "npm",
+      process.platform === "win32"
+        ? ["-NoProfile", "-Command", "& npm run check:file -- missing-query.sql"]
+        : ["run", "check:file", "--", "missing-query.sql"],
+      { cwd: process.cwd(), encoding: "utf8", env: process.env },
+    );
+    const output = `${result.stdout}${result.stderr}`;
+
+    expect(result.status).toBe(1);
+    expect(output).toContain("Error: Could not read SQL file.");
+  });
 });

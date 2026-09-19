@@ -8,6 +8,7 @@
   },
   "scripts": {
     "check": "tsx src/cli.ts",
+    "check:file": "tsx src/cli.ts --file",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },

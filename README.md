@@ -45,7 +45,7 @@ npm run check -- "DELETE FROM users;"
 For multi-line SQL, use a file to preserve its line breaks:
 
 ```sh
-npm run check -- --file query.sql
+npm run check:file -- query.sql
 ```
 
 You can also pipe SQL through standard input:
