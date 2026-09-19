@@ -29,6 +29,29 @@ YOU PROBABLY DON'T WANT TO RUN THIS.
 
 この結果は、条件のない `DELETE` を「多数または全行への影響があり、破壊的で、本番実行前のレビューが必要な操作」として高く評価した例です。値はモデル更新や質問文の変更により変わり得ます。
 
+### 条件付きSELECT（入力どおりの空白なし表記）
+
+実行コマンド:
+
+```powershell
+npm run check -- "SELECT id, emailFROM usersWHERE id = 123;"
+```
+
+観測結果:
+
+```text
+SQL:
+SELECT id, emailFROM usersWHERE id = 123;
+
+Semantic full scan risk  [##--------] 15%
+Destructive risk         [----------] 2%
+Review required          [#####-----] 52%
+
+Danger level: SAFE
+```
+
+この入力には `emailFROM` と `usersWHERE` の間の空白がありません。それでも低いリスクとして分類された観測例です。本ツールは完全なSQL構文検証器ではないため、この結果をSQLが実行可能・安全である保証として扱ってはいけません。構文の妥当性は対象DBMSまたはSQLパーサーで別途検証してください。
+
 ## 追加の評価用SQL
 
 以下の例はSQLを実行するためのものではなく、リスク分類の傾向を比べるための入力例です。各例は単独のSQL文として実行してください。
