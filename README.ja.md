@@ -4,6 +4,8 @@
 
 [実行結果と評価用SQL例](docs/EXECUTION_EXAMPLES.ja.md)
 
+[実装解説](docs/IMPLEMENTATION_GUIDE.ja.md)
+
 `jev-sql-danger-checker` は、Jev を使ってSQL文の意味的な運用リスクを分類する実験的なCLIです。
 
 このツールはSQLを実行したり、データベースへ接続したり、実行計画を調べたり、SQLを完全に構文解析したりしません。入力されたSQL本文をJevへ送信し、次の4つの独立したシグナルを返します。
