@@ -19,8 +19,11 @@ export interface CliDependencies {
 
 export type CliEnvironment = Record<string, string | undefined>;
 
+// コマンドライン引数を、実際にJevへ渡すSQL本文へ変換する。
+// ファイル／標準入力では改行をそのまま残し、通常の引数だけを空白で連結する。
 async function readSql(args: string[], dependencies: CliDependencies): Promise<string | undefined> {
   if (args[0] === "--file") {
+    // パスの取り違えを防ぐため、ファイル入力はパス1個だけを受け付ける。
     if (args.length !== 2) {
       dependencies.writeStderr("Error: --file requires exactly one path.\n");
       return undefined;
@@ -35,6 +38,7 @@ async function readSql(args: string[], dependencies: CliDependencies): Promise<s
   }
 
   if (args[0] === "--stdin") {
+    // stdinと引数SQLを混ぜると入力元が曖昧になるため、単独指定に限定する。
     if (args.length !== 1) {
       dependencies.writeStderr("Error: --stdin cannot be combined with SQL arguments.\n");
       return undefined;
@@ -61,6 +65,7 @@ export async function main(
   environment: CliEnvironment,
   dependencies: CliDependencies,
 ): Promise<number> {
+  // 入力を読む段階のエラーでは、SQL本文をエラー出力へ含めない。
   const sql = await readSql(args, dependencies);
   if (sql === undefined) {
     return 1;
@@ -78,6 +83,7 @@ export async function main(
   }
 
   try {
+    // CLIは表示と終了コードだけを担当し、Jevとの通信はcheckSqlへ委譲する。
     const assessment = await dependencies.checkSql(sql, dependencies.createClient(apiKey));
     dependencies.writeStdout(formatResult(sql, assessment));
     return 0;
@@ -93,10 +99,12 @@ export async function main(
 }
 
 export function createDefaultClient(apiKey: string): TypeSafeClient {
+  // SDKのdebugログにはSQL本文やAPI応答が含まれ得るため、明示的に無効化する。
   return new TypeSafeClient({ apiKey, logLevel: "off" });
 }
 
 function readProcessStdin(): Promise<string> {
+  // dataイベントをすべて連結し、endイベントで初めて完全な複数行SQLとして返す。
   return new Promise((resolve, reject) => {
     let input = "";
     process.stdin.setEncoding("utf8");
@@ -119,6 +127,7 @@ const defaultDependencies: CliDependencies = {
 
 const executedFile = process.argv[1];
 if (executedFile && fileURLToPath(import.meta.url) === resolve(executedFile)) {
+  // テストからimportした場合は実行せず、CLIとして直接起動したときだけmainを呼ぶ。
   main(process.argv.slice(2), process.env, defaultDependencies).then((code) => {
     process.exitCode = code;
   });
