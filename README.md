@@ -1,5 +1,7 @@
 # jev-sql-danger-checker
 
+[日本語版 README](README.ja.md)
+
 `jev-sql-danger-checker` is an experimental CLI that uses Jev to classify the semantic operational risk of a SQL statement.
 
 It does not execute SQL, connect to a database, inspect a query plan, or parse SQL completely. It sends the supplied SQL text to Jev and reports four independent signals:
