@@ -1,1 +1,6 @@
 .env
+node_modules/
+coverage/
+dist/
+work/
+docs/superpowers/
