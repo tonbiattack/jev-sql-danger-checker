@@ -52,6 +52,37 @@ Danger level: SAFE
 
 この入力には `emailFROM` と `usersWHERE` の間の空白がありません。それでも低いリスクとして分類された観測例です。本ツールは完全なSQL構文検証器ではないため、この結果をSQLが実行可能・安全である保証として扱ってはいけません。構文の妥当性は対象DBMSまたはSQLパーサーで別途検証してください。
 
+### `--file` 指定時にファイル名が評価された観測
+
+実行コマンド:
+
+```powershell
+npm run check -- --file query.sql
+```
+
+観測結果:
+
+```text
+SQL:
+query.sql
+
+Semantic full scan risk  [######----] 64%
+Destructive risk         [####------] 38%
+Review required          [########--] 79%
+
+Danger level: CAUTION
+```
+
+このときの `query.sql` の内容:
+
+```sql
+SELECT id, email
+FROM users
+WHERE id = 123;
+```
+
+この観測では、出力の `SQL:` がファイル本文ではなく `query.sql` になっています。したがって、上記の確率と `CAUTION` はSQL本文ではなくファイル名を対象にした分類結果として記録します。ファイル本文の分類結果として解釈してはいけません。
+
 ## 追加の評価用SQL
 
 以下の例はSQLを実行するためのものではなく、リスク分類の傾向を比べるための入力例です。各例は単独のSQL文として実行してください。
